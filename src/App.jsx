@@ -1,11 +1,16 @@
-import { Navbar } from "./components"
+import { Navbar, Sidebar } from "./components"
+import Feed from "./components/Feed"
 
 function App() {
 
   return (
     <>
-      <h1 className="text-red-700">Yt clone using React</h1>
       <Navbar />
+      <div>
+        <Sidebar />
+        <Feed />
+      </div>
+
     </>
   )
 }
