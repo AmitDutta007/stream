@@ -6,7 +6,7 @@ function App() {
   return (
     <>
       <Navbar />
-      <div>
+      <div className="flex mt-16">
         <Sidebar />
         <Feed />
       </div>

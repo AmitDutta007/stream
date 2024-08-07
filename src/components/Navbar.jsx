@@ -3,15 +3,16 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { CiVideoOn } from "react-icons/ci";
 import { CiSearch } from "react-icons/ci";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { toggleSidebar } from "../redux/appSlice";
 
 const Navbar = () => {
 
-    const [open, setOpen] = useState(true)
+
+    const dispatch = useDispatch()
 
     const toggleHandler = () => {
-        console.log('clicked');
-        setOpen(!open)
-
+        dispatch(toggleSidebar())
     }
 
 
