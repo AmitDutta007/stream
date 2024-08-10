@@ -1,12 +1,24 @@
 import { useEffect } from "react"
 import axios from "axios"
+import { YOUTUBE_LIST_VIDEOS } from "../constant"
+import VideoCard from "./VideoCard"
 
 const VideoContainer = () => {
 
 
 
   const fetchVideo = async ()=>{
-    const res = await axios.get()
+
+
+
+    try {
+      const res = await axios.get(`${YOUTUBE_LIST_VIDEOS}`)
+      console.log(res);
+            
+    } catch (error) {
+      console.log(error);
+      
+    }
   }
 
   useEffect(()=>{
@@ -15,7 +27,7 @@ const VideoContainer = () => {
 
   return (
     <div>
-        fgbbt
+        <VideoCard/>
     </div>
   )
 }
