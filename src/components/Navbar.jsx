@@ -5,6 +5,7 @@ import { CiSearch } from "react-icons/ci";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toggleSidebar } from "../redux/appSlice";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
 
@@ -23,8 +24,10 @@ const Navbar = () => {
                 <div className="flex items-center ">
                     <GiHamburgerMenu onClick={toggleHandler} size="24px" className="cursor-pointer" />
 
-                    <img className="pl-8" width={"140px"}
-                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/YouTube_Logo_2017.svg/768px-YouTube_Logo_2017.svg.png" alt="yt_logo" />
+                    {/* <Link to="/"> */}
+                        <img className="pl-8" width={"140px"}
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/YouTube_Logo_2017.svg/768px-YouTube_Logo_2017.svg.png" alt="yt_logo" />
+                    {/* </Link> */}
                 </div>
 
                 <div className="flex w-[40%] items-center">
