@@ -1,10 +1,36 @@
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom"
+import API_KEY from '../constant'
+import axios from "axios";
+import Avatar from "react-avatar";
+import { AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
+import { PiShareFatLight } from "react-icons/pi";
+import { GoDownload } from "react-icons/go";
 
 const Watch = () => {
+
+    const [singleVideo, setSingleVideo] = useState([]);
 
     const [searchParams] = useSearchParams()
     const videoId = searchParams.get('v');
     console.log(videoId);
+
+
+
+    const getSingleVideo = async () => {
+        try {
+            const res = await axios.get(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoId}&key=${API_KEY}`);
+            setSingleVideo(res?.data?.items[0]);
+            console.log(res?.data?.items[0]);
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getSingleVideo();
+    }, []);
 
 
     return (
@@ -12,36 +38,35 @@ const Watch = () => {
             <div className='flex w-[88%]'>
                 <div>
                     <iframe
-                        width="560"
-                        height="315"
-                        src={`https://www.youtube.com/embed/${videoId}?&autoplay=0`}
+                        width="900"
+                        height="500"
+                        src={`https://www.youtube.com/embed/${videoId}?&autoplay=1`}
                         title="YouTube video player"
-                        frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin"
-                        allowfullscreen>
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen>
 
                     </iframe>
-                    {/* <h1 className='font-bold mt-2 text-lg'>{singleVideo?.snippet?.title}</h1> */}
+                    <h1 className='font-bold mt-2 text-lg'>{singleVideo?.snippet?.title}</h1>
                     <div className='flex items-center justify-between'>
-                        <div className='flex items-center justify-between w-[35%]'>
-                            <div className='flex'>
-                                {/* <Avatar src="https://play-lh.googleusercontent.com/C9CAt9tZr8SSi4zKCxhQc9v4I6AOTqRmnLchsu1wVDQL0gsQ3fmbCVgQmOVM1zPru8UH=w240-h480-rw" size={35} round={true} /> */}
-                                {/* <h1 className='font-bold ml-2'>{singleVideo?.snippet?.channelTitle}</h1> */}
+                        <div className='flex items-center justify-between w-[40%]'>
+                            <div className='flex items-center'>
+                                <Avatar src="https://play-lh.googleusercontent.com/C9CAt9tZr8SSi4zKCxhQc9v4I6AOTqRmnLchsu1wVDQL0gsQ3fmbCVgQmOVM1zPru8UH=w240-h480-rw" size={35} round={true} />
+                                <h1 className='font-bold ml-2'>{singleVideo?.snippet?.channelTitle}</h1>
                             </div>
                             <button className='px-4 py-1 font-medium bg-black text-white rounded-full'>Subscribe</button>
                         </div>
                         <div className='flex items-center w-[40%] justify-between mt-2'>
                             <div className='flex items-center cursor-pointer bg-gray-200 px-4 py-2 rounded-full'>
-                                {/* <AiOutlineLike size="20px" className='mr-5' />
-                                <AiOutlineDislike size="20px" /> */}
+                                <AiOutlineLike size="20px" className='mr-1' />{singleVideo?.statistics?.likeCount}
+                                <AiOutlineDislike size="20px"className='ml-2' />
                             </div>
                             <div className='flex items-center cursor-pointer bg-gray-200 px-4 py-2 rounded-full'>
-                                {/* <PiShareFatLight size="20px" className='mr-2' /> */}
+                                <PiShareFatLight size="20px" className='mr-2' />
                                 <span>Share</span>
                             </div>
                             <div className='flex items-center cursor-pointer bg-gray-200 px-4 py-2 rounded-full'>
-                                {/* <GoDownload /> */}
+                                <GoDownload />
                                 <span>Download</span>
                             </div>
                         </div>
