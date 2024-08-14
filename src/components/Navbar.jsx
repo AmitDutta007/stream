@@ -2,19 +2,55 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { CiVideoOn } from "react-icons/ci";
 import { CiSearch } from "react-icons/ci";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { toggleSidebar } from "../redux/appSlice";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setCategory, setSearchSuggestion, toggleSidebar } from "../redux/appSlice";
 import { Link } from "react-router-dom";
+import { SEARCH_SUGGESTIONS_API } from "../constant";
+import axios from "axios";
 
 const Navbar = () => {
 
 
-    const dispatch = useDispatch()
+    const [input, setInput] = useState(" ");
+    const [suggestion, setSuggestion] = useState(false);
+    const dispatch = useDispatch();
+    const { searchSuggestion } = useSelector((store) => store.app);
+
+    const searchVideo = () => {
+        dispatch(setCategory(input));
+        setInput(" ");
+    }
 
     const toggleHandler = () => {
         dispatch(toggleSidebar())
     }
+
+    const showSuggestion = async () => {
+        try {
+            const res = await axios.get(SEARCH_SUGGESTIONS_API+input);
+            dispatch(setSearchSuggestion(res?.data[1]))
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const openSuggestion = () => {
+        setSuggestion(true);
+    }
+
+    useEffect(() => {
+        // const timer = setTimeout(() => {
+        //     showSuggestion();
+        // }, 200)
+
+        // return () => {
+        //     clearTimeout(timer);
+        // }
+        showSuggestion()
+
+    }, [input])
+
 
 
     return (
@@ -32,9 +68,26 @@ const Navbar = () => {
 
                 <div className="flex w-[40%] items-center">
                     <div className="flex w-[100%] ">
-                        <input type="text" placeholder="Search" className="w-full py-2 px-4 border border-gray-400 rounded-l-full outline-none" />
-                        <button className="py-2 border border-gray-400 rounded-r-full px-4"><CiSearch size="24px" /></button>
+                        <input onFocus={openSuggestion} onChange={(e) => setInput(e.target.value)} type="text" placeholder="Search" className="w-full py-2 px-4 border border-gray-400 rounded-l-full outline-none" />
+                        <button onClick={searchVideo} className="py-2 border border-gray-400 rounded-r-full px-4"><CiSearch size="24px" /></button>
                     </div>
+                    {
+                        (suggestion && searchSuggestion.length !== 0) &&
+                        <div className="absolute top-3 z-50 w-[30%] py-5 bg-white shadow-lg mt-12 rounded-lg border border-gray-200">
+                            <ul>
+                                {
+                                    searchSuggestion.map((text, idx) => {
+                                        return (
+                                            <div key={idx} className="flex items-center px-4 hover:bg-gray-100">
+                                                <CiSearch size="24px" />
+                                                <li className="px-2 py-1 cursor-pointer text-md font-medium">{text}</li>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </ul>
+                        </div>
+                    }
                 </div>
 
                 <div className="flex w-[5%] justify-between items-center">
